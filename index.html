@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jedrek Lee · Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: an engineer's notebook on graph paper. Every project is a six-step log
+   (problem → constraint → tested → failed → changed → result), shown as a pipeline in the hero. */
+:root{
+  --paper:#F2F0E8; --card:#FBFAF5; --ink:#1A1D26; --muted:#5D6270; --rule:#D6D2C4;
+  --accent:#2D47E0; --fail:#B93D0B; --todo-bg:#FFF4CC; --todo-ink:#6E5200;
+  --display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#12151D; --card:#181C26; --ink:#E9E7E0; --muted:#9AA0AE; --rule:#2A2F3B;
+    --accent:#8097FF; --fail:#FB8A55; --todo-bg:#2B2614; --todo-ink:#E8C766;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12151D; --card:#181C26; --ink:#E9E7E0; --muted:#9AA0AE; --rule:#2A2F3B;
+  --accent:#8097FF; --fail:#FB8A55; --todo-bg:#2B2614; --todo-ink:#E8C766;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  margin:0; background-color:var(--paper); color:var(--ink);
+  font-family:var(--body); font-size:18px; line-height:1.6;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--rule) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--rule) 45%, transparent) 1px, transparent 1px);
+  background-size:28px 28px;
+}
+a{color:var(--accent); text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+.wrap{max-width:1040px; margin:0 auto; padding:0 24px}
+.mono{font-family:var(--mono); font-size:13px; letter-spacing:.04em; text-transform:uppercase}
+
+/* placeholders the owner still has to fill in */
+.todo{
+  background:var(--todo-bg); color:var(--todo-ink);
+  border:1.5px dashed currentColor; border-radius:4px;
+  padding:1px 8px; font-style:italic;
+}
+p .todo, li .todo, span.todo{display:inline}
+div.todo{display:block; padding:10px 14px}
+.todo::before{content:"FILL IN · "; font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.06em; font-weight:600}
+
+/* hero */
+header.hero{padding:72px 0 40px}
+.hero .kicker{color:var(--muted); margin:0 0 18px}
+.hero h1{
+  font-family:var(--display); font-weight:800; font-size:clamp(44px, 8vw, 92px);
+  line-height:.95; letter-spacing:-.025em; margin:0 0 22px; text-wrap:balance;
+}
+.hero .lede{max-width:62ch; font-size:20px; margin:0 0 8px}
+.hero .school{max-width:62ch; color:var(--muted); margin:0 0 36px}
+
+.pipeline{
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(6, 1fr); gap:0;
+  border:1.5px solid var(--ink); border-radius:6px; overflow:hidden; background:var(--card);
+}
+.pipeline li{padding:14px 14px 16px; border-right:1.5px solid var(--ink); position:relative}
+.pipeline li:last-child{border-right:0}
+.pipeline .n{font-family:var(--mono); font-size:12px; color:var(--muted)}
+.pipeline .s{font-family:var(--display); font-weight:700; font-size:19px; line-height:1.15; margin-top:4px; display:block}
+.pipeline li.fail .s{color:var(--fail)}
+.pipeline li.done{background:var(--ink); color:var(--paper)}
+.pipeline li.done .n{color:color-mix(in srgb, var(--paper) 70%, transparent)}
+.pipe-note{color:var(--muted); font-size:16px; margin:12px 0 0}
+@media (max-width:760px){
+  .pipeline{grid-template-columns:repeat(3, 1fr)}
+  .pipeline li:nth-child(3){border-right:0}
+  .pipeline li:nth-child(-n+3){border-bottom:1.5px solid var(--ink)}
+}
+@media (max-width:420px){
+  .pipeline{grid-template-columns:repeat(2, 1fr)}
+  .pipeline li{border-right:1.5px solid var(--ink)!important; border-bottom:1.5px solid var(--ink)}
+  .pipeline li:nth-child(2n){border-right:0!important}
+  .pipeline li:nth-last-child(-n+2){border-bottom:0}
+}
+
+/* project index */
+section.index{padding:28px 0 8px}
+h2.sec{font-family:var(--display); font-weight:700; font-size:28px; margin:0 0 16px; letter-spacing:-.01em}
+.projects{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px}
+.proj{
+  display:flex; flex-direction:column; gap:6px; text-decoration:none; color:var(--ink);
+  background:var(--card); border:1.5px solid var(--rule); border-radius:6px; padding:16px 18px;
+  transition:border-color .15s, transform .15s;
+}
+.proj:hover{border-color:var(--accent); transform:translateY(-2px)}
+@media (prefers-reduced-motion: reduce){.proj{transition:none}.proj:hover{transform:none}}
+.proj .t{font-family:var(--display); font-weight:700; font-size:22px; line-height:1.1}
+.proj .m{color:var(--muted)}
+.proj .r{font-size:16px}
+.proj .go{margin-top:auto; color:var(--accent)}
+
+/* case studies */
+article.case{padding:56px 0 8px; scroll-margin-top:12px}
+.case-head{display:grid; gap:10px; margin-bottom:22px}
+.case-head .mono{color:var(--accent)}
+.case h3{font-family:var(--display); font-weight:800; font-size:clamp(34px, 5vw, 52px); line-height:1; margin:0; letter-spacing:-.02em; text-wrap:balance}
+.case .sum{max-width:62ch; margin:0; font-size:19px}
+.facts{display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 0; padding:0; list-style:none}
+.facts li{font-family:var(--mono); font-size:12.5px; border:1.5px solid var(--rule); border-radius:999px; padding:3px 11px; background:var(--card)}
+
+.log{
+  margin:0; padding:0; list-style:none; background:var(--card);
+  border:1.5px solid var(--ink); border-radius:6px;
+}
+.log > li{display:grid; grid-template-columns:200px 1fr; gap:24px; padding:18px 22px; border-bottom:1px solid var(--rule)}
+.log > li:last-child{border-bottom:0}
+.log .lbl{font-family:var(--mono); font-size:13px; letter-spacing:.04em; text-transform:uppercase; padding-top:3px}
+.log .lbl b{display:block; font-size:12px; color:var(--muted); font-weight:400}
+.log li.fail .lbl{color:var(--fail)}
+.log li.done .lbl{color:var(--accent)}
+.log .txt{max-width:62ch}
+.log .txt p{margin:0 0 10px}
+.log .txt p:last-child{margin-bottom:0}
+.log .txt ul{margin:0; padding-left:20px}
+.log .txt li{margin:0 0 6px}
+@media (max-width:640px){
+  .log > li{grid-template-columns:1fr; gap:6px; padding:16px}
+}
+.learned{
+  margin:16px 0 0; padding:16px 20px; border-left:4px solid var(--accent);
+  background:color-mix(in srgb, var(--accent) 8%, var(--card)); border-radius:0 6px 6px 0; max-width:72ch;
+}
+.learned .mono{color:var(--accent); display:block; margin-bottom:4px}
+.learned p{margin:0}
+.related{font-size:16px; color:var(--muted); margin:14px 0 0}
+
+footer{padding:64px 0 56px}
+footer .box{border-top:1.5px solid var(--ink); padding-top:24px; display:flex; flex-wrap:wrap; gap:20px 40px; align-items:baseline}
+footer h2{font-family:var(--display); font-weight:700; font-size:28px; margin:0}
+footer ul{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:10px 28px}
+footer .small{color:var(--muted); font-size:15px; width:100%; margin:0}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker mono">Portfolio · Game &amp; tools programmer</p>
+    <h1>Jedrek Lee</h1>
+    <p class="lede">I make games and the tools behind them, mostly in C++ and Unity/C#, and I'm currently learning Unreal Engine.</p>
+    <p class="school">BSc (Hons) in Computer Science in Interactive Media and Game Development, DigiPen Institute of Technology Singapore.</p>
+
+    <ol class="pipeline" aria-label="How each project write-up is structured">
+      <li><span class="n">01</span><span class="s">Problem</span></li>
+      <li><span class="n">02</span><span class="s">Constraint</span></li>
+      <li><span class="n">03</span><span class="s">What I tested</span></li>
+      <li class="fail"><span class="n">04</span><span class="s">What failed</span></li>
+      <li><span class="n">05</span><span class="s">What changed</span></li>
+      <li class="done"><span class="n">06</span><span class="s">What happened</span></li>
+    </ol>
+    <p class="pipe-note">These are the six steps I use to think through a project. Each write-up below covers the three that matter most for that project, so you can see how I worked through it as well as what I shipped.</p>
+  </div>
+</header>
+
+<section class="index" aria-labelledby="projects-h">
+  <div class="wrap">
+    <h2 class="sec" id="projects-h">Projects</h2>
+    <div class="projects">
+      <a class="proj" href="#umapyoi-engine">
+        <span class="t">Umapyoi Engine</span>
+        <span class="m mono">C++ · ImGui · 8 people</span>
+        <span class="r">Custom game engine. I built the math library, event system, UI and editor gizmo.</span>
+        <span class="go mono">Read write-up ↓</span>
+      </a>
+      <a class="proj" href="#parry-everything">
+        <span class="t">Parry Everything</span>
+        <span class="m mono">Umapyoi Engine</span>
+        <span class="r">Game built on our own engine, nominated for a school event.</span>
+        <span class="go mono">Read write-up ↓</span>
+      </a>
+      <a class="proj" href="#anytimereno">
+        <span class="t">AnytimeReno</span>
+        <span class="m mono">Unity 6.3 · C# · WebGL</span>
+        <span class="r">Floor plan editor that runs in the browser. I own the UI and saving.</span>
+        <span class="go mono">Read write-up ↓</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<main>
+  <!-- UMAPYOI ENGINE -->
+  <article class="case" id="umapyoi-engine">
+    <div class="wrap">
+      <div class="case-head">
+        <span class="mono">Project 01 · Engine</span>
+        <h3>Umapyoi Engine</h3>
+        <p class="sum">A custom game engine written in C++ by a team of eight over seven months, with ImGui-based editor tools. My parts were the math library, the event system, the UI and the editor gizmo.</p>
+        <ul class="facts">
+          <li>C++</li><li>ImGui</li><li>8 people</li><li>7 months</li><li>Math lib · Events · UI · Gizmo</li>
+        </ul>
+      </div>
+      <ol class="log">
+        <li><div class="lbl"><b>01</b>Problem</div><div class="txt"><p>The course required us to build our own engine instead of using an existing one, so every system a game needs had to be written by the team.</p></div></li>
+        <li class="fail"><div class="lbl"><b>04</b>What failed</div><div class="txt"><p>The editor gizmo didn't handle every object the same way. Transform components (game objects) and RectTransform components (UI elements) behave differently, so a gizmo that worked for one didn't work properly for the other.</p></div></li>
+        <li class="done"><div class="lbl"><b>06</b>What happened</div><div class="txt"><p>We used the engine to build and ship <a href="#parry-everything">Parry Everything</a>, which was nominated to be presented at a school event.</p></div></li>
+      </ol>
+    </div>
+  </article>
+
+  <!-- PARRY EVERYTHING -->
+  <article class="case" id="parry-everything">
+    <div class="wrap">
+      <div class="case-head">
+        <span class="mono">Project 02 · Game</span>
+        <h3>Parry Everything</h3>
+        <p class="sum">A game built on our own <a href="#umapyoi-engine">Umapyoi Engine</a>. A 2D roguelite built around timing-based parries.</p>
+        <ul class="facts">
+          <li>Umapyoi Engine</li><li>C++</li><li>Nominated for a school event</li>
+        </ul>
+      </div>
+      <ol class="log">
+        <li><div class="lbl"><b>01</b>Problem</div><div class="txt"><p>Parrying is the whole game, so it had to feel fair and responsive. If players miss a parry, it should be because of their timing, not the controls.</p></div></li>
+        <li class="fail"><div class="lbl"><b>04</b>What failed</div><div class="txt"><p>Players struggled with the controls. Juggling mouse buttons and key combinations at once got in the way of the parry timing.</p></div></li>
+        <li><div class="lbl"><b>05</b>What changed</div><div class="txt"><p>We switched to Q, E and R combinations only, so players could focus on one action per hand.</p></div></li>
+      </ol>
+    </div>
+  </article>
+
+  <!-- ANYTIMERENO -->
+  <article class="case" id="anytimereno">
+    <div class="wrap">
+      <div class="case-head">
+        <span class="mono">Project 03 · Tool</span>
+        <h3>AnytimeReno</h3>
+        <p class="sum">A floor plan editor for renovation planning that runs in the browser, where users draw walls and rooms, measure them and place furniture. Built in Unity 6.3 for WebGL as a team project. I own the UI, the measurement overlay and the scene saving system.</p>
+        <ul class="facts">
+          <li>Unity 6.3</li><li>C#</li><li>WebGL</li><li>Team project</li><li>UI · Measurements · Saving</li>
+        </ul>
+      </div>
+      <ol class="log">
+        <li><div class="lbl"><b>01</b>Problem</div><div class="txt"><p>Users needed to lay out walls and rooms themselves, in the browser, while the app was running. That meant a runtime authoring tool, not a Unity Editor extension, with a UI that could keep growing as the team added tools like image import and furniture upload.</p></div></li>
+        <li class="fail"><div class="lbl"><b>04</b>What failed</div><div class="txt"><p>Selecting a second wall stacked a second set of Length and Height fields under the first in the inspector, because the panel was hidden and shown again without clearing its rows.</p><p>The mode buttons also stayed lit after a wall was placed, since nothing told the UI that the editor had gone back to its default mode.</p></div></li>
+        <li><div class="lbl"><b>05</b>What changed</div><div class="txt"><ul>
+          <li>The inspector now clears its rows before rebuilding, and UIManager watches the editor's mode so buttons switch themselves off.</li>
+          <li>I moved saving to snapshot-only, storing corners and the walls between them, so a load never has to replay a chain of changes. The file format still has room for incremental saves later.</li>
+          <li>Each save is hashed and points to the save before it, so the system can check a file is intact and spot two tabs saving over each other.</li>
+        </ul></div></li>
+      </ol>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="box">
+      <h2>Get in touch</h2>
+      <ul>
+        <li><a href="https://github.com/jedrekktnh">github.com/jedrekktnh</a></li>
+        <li><a href="https://www.linkedin.com/in/jedrek-lee-jing-wei/">LinkedIn</a></li>
+        <li><a href="mailto:jedrekleejingwei@gmail.com">jedrekleejingwei@gmail.com</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
